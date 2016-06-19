@@ -17,7 +17,7 @@
      * @param {Object} song
      */
 
-    var setSong = function() {
+    var setSong = function(song) {
       if (currentBuzzObject) {
         currentBuzzObject.stop();
         currentSong.playing = null;
