@@ -1,14 +1,14 @@
 (function () {
   function SongPlayer(Fixtures) {
-      var SongPlayer = {};
-      
+    var SongPlayer = {};
 
-      /**
-       * @desc Collection of songs
-       * @type {Colletion}
-       */
 
-      var currentAlbum = Fixtures.getAlbum();
+    /**
+     * @desc Collection of songs
+     * @type {Colletion}
+     */
+
+    var currentAlbum = Fixtures.getAlbum();
 
     /**
      * @desc Buzz object audio file
@@ -25,8 +25,7 @@
 
     var setSong = function(song) {
       if (currentBuzzObject) {
-        currentBuzzObject.stop();
-        SongPlayer.currentSong.playing = null;
+       stopSong(song);
       }
 
       currentBuzzObject = new buzz.sound(song.audioUrl, {
@@ -47,9 +46,9 @@
       currentBuzzObject.play();
       SongPlayer.currentSong.playing = true;
     };
-    
+
     /**
-     * @function pauseSonr
+     * @function pauseSong
      * @desc Stops the currentBuzzObject, and sets the playing variable to false
      * @param {Object} song
      */
@@ -60,6 +59,11 @@
       SongPlayer.currentSong.playing = null;
     };
 
+
+    var stopSong = function(song) {
+      currentBuzzObject.stop();
+      SongPlayer.currentSong.playing = null;
+    };
 
     /*
      * @function getSongIndex
@@ -101,18 +105,18 @@
     };
 
 
-   /*
-    * @function SongPlayer.previous
-    * @desc decrements songIndex so that current playing song moves down one
-    */ 
+    /*
+     * @function SongPlayer.previous
+     * @desc decrements songIndex so that current playing song moves down one
+     */ 
 
     SongPlayer.previous = function() {
       var currentSongIndex = getSongIndex(SongPlayer.currentSong);
       currentSongIndex--;
 
       if (currentSongIndex < 0) {
-        currentBuzzObject.stop();
-        SongPlayer.currentSong.playing = null;
+        stopSong(song);
+
 
       } else {
         var song = currentAlbum.songs[currentSongIndex];
@@ -120,16 +124,27 @@
         playSong(song);
       }
     };
-    
+
     /*
      * @function SongPlayer.next
      * @desc increments songIndex so that current playing song moves up one
      */
 
-    // SongPlayer.next = function() {
-    //   var currentSongIndex = getSongIndex(SongPlayer.currentSong);
-    //   currentSongIndex++;
-    // };
+    SongPlayer.next = function() {
+      var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+      currentSongIndex++;
+
+      if (currentSongIndex > currentAlbum.songs.length) {
+        stopSong(song);
+
+      }
+      else {
+        var song = currentAlbum.songs[currentSongIndex];
+        setSong(song);
+        playSong(song);
+      }
+
+    };
 
     return SongPlayer;
   }
